@@ -10,21 +10,31 @@ from payroll.models.models import Deduction
 
 
 def default_currency(request):
-    """
-    This method will return the currency
-    """
-    if models.PayrollSettings.objects.first() is None:
-        settings = models.PayrollSettings()
-        settings.currency_symbol = "$"
-        settings.company_id = getattr(request, "selected_company_instance", None)
-        settings.save()
-    symbol = models.PayrollSettings.objects.first().currency_symbol
-    position = models.PayrollSettings.objects.first().position
-    return {
-        "currency": request.session.get("currency", symbol),
-        "position": request.session.get("position", position),
-    }
+    payroll_settings = models.PayrollSettings.objects.first()
 
+    if payroll_settings is None:
+        selected_company = request.session.get("selected_company")
+
+        if selected_company and selected_company != "all":
+            company_id = selected_company
+        else:
+            company_id = None
+
+        payroll_settings = models.PayrollSettings.objects.create(
+            currency_symbol="$",
+            company_id=company_id,
+        )
+
+    return {
+        "currency": request.session.get(
+            "currency",
+            payroll_settings.currency_symbol,
+        ),
+        "position": request.session.get(
+            "position",
+            payroll_settings.position,
+        ),
+    }
 
 def host(request):
     """
