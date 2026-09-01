@@ -18,3 +18,4 @@ Examples:
     INSTALLED_APPS += ["client_portal"]
     MIDDLEWARE += ["client_portal.middleware.ClientTrackingMiddleware"]
 """
+WHITE_LABELLING = True
