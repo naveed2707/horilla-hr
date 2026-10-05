@@ -508,7 +508,7 @@ def _attendance_redirect(request):
 
 urlpatterns.append(path("recruitment/", _section_redirect("recruitment-dashboard")))
 urlpatterns.append(
-    path("onboarding/", _section_redirect("onboarding-modern-dashboard"))
+    path("onboarding/", _section_redirect("onboarding-dashboard"))
 )
 urlpatterns.append(path("employee/", _section_redirect("ess-dashboard")))
 urlpatterns.append(path("attendance/", _attendance_redirect))

@@ -894,21 +894,79 @@ class EmployeePasswordResetView(PasswordResetView):
     template_name = "forgot_password.html"
     form_class = PassWordResetForm
 
+    # def form_valid(self, form):
+    #     try:
+    #         email_backend = ConfiguredEmailBackend()
+    #         default = "base.backends.ConfiguredEmailBackend"
+    #         is_default_backend = True
+    #         EMAIL_BACKEND = getattr(settings, "EMAIL_BACKEND", "")
+    #         if EMAIL_BACKEND and default != EMAIL_BACKEND:
+    #             is_default_backend = False
+    #         if is_default_backend and not email_backend.configuration:
+    #             messages.error(self.request, _("Primary mail server is not configured"))
+    #             return HorillaRedirect(self.request)
+
+    #         username = form.cleaned_data["email"]
+    #         user = HorillaUser.objects.filter(username=username).first()
+    #         if user:
+    #             opts = {
+    #                 "use_https": self.request.is_secure(),
+    #                 "token_generator": self.token_generator,
+    #                 "from_email": email_backend.dynamic_from_email_with_display_name,
+    #                 "email_template_name": self.email_template_name,
+    #                 "subject_template_name": self.subject_template_name,
+    #                 "request": self.request,
+    #                 "html_email_template_name": self.html_email_template_name,
+    #                 "extra_email_context": self.extra_email_context,
+    #             }
+    #             form.save(**opts)
+    #         messages.success(
+    #             self.request,
+    #             _("If your account exists, a password reset link has been sent"),
+    #         )
+    #         return HorillaRedirect(self.request)
     def form_valid(self, form):
+        print("### ENTERED EmployeePasswordResetView.form_valid ###")
+
         try:
+            print("### BEFORE EMAIL BACKEND ###")
+
             email_backend = ConfiguredEmailBackend()
+
+            print("### EMAIL BACKEND CREATED ###")
+
             default = "base.backends.ConfiguredEmailBackend"
             is_default_backend = True
+
             EMAIL_BACKEND = getattr(settings, "EMAIL_BACKEND", "")
+
+            print("### EMAIL_BACKEND:", repr(EMAIL_BACKEND))
+
             if EMAIL_BACKEND and default != EMAIL_BACKEND:
                 is_default_backend = False
+
+            print("### is_default_backend:", is_default_backend)
+            print("### configuration:", email_backend.configuration)
+
             if is_default_backend and not email_backend.configuration:
-                messages.error(self.request, _("Primary mail server is not configured"))
+                print("### NO EMAIL CONFIGURATION ###")
+                messages.error(
+                    self.request,
+                    _("Primary mail server is not configured")
+                )
                 return HorillaRedirect(self.request)
 
-            username = form.cleaned_data["email"]
+            username = form.cleaned_data["email"].strip()
+
+            print("### RESET USERNAME:", repr(username))
+
             user = HorillaUser.objects.filter(username=username).first()
+
+            print("### RESET USER:", repr(user))
+
             if user:
+                print("### USER FOUND, CALLING form.save() ###")
+
                 opts = {
                     "use_https": self.request.is_secure(),
                     "token_generator": self.token_generator,
@@ -919,10 +977,27 @@ class EmployeePasswordResetView(PasswordResetView):
                     "html_email_template_name": self.html_email_template_name,
                     "extra_email_context": self.extra_email_context,
                 }
+
                 form.save(**opts)
+
+                print("### form.save() COMPLETED ###")
+
             messages.success(
                 self.request,
                 _("If your account exists, a password reset link has been sent"),
+            )
+            return HorillaRedirect(self.request)
+
+        except Exception as e:
+            print("### PASSWORD RESET EXCEPTION ###")
+            print(repr(e))
+
+            import traceback
+            traceback.print_exc()
+
+            messages.error(
+                self.request,
+                _("Something went wrong.....")
             )
             return HorillaRedirect(self.request)
 

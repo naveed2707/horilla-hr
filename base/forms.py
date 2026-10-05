@@ -3148,6 +3148,7 @@ class PassWordResetForm(forms.Form):
         html_email_template_name=None,
         extra_email_context=None,
     ):
+   
         """
         Generate a one-use only link for resetting password and send it to the
         user.

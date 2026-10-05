@@ -78,7 +78,7 @@ class EmployeeProfileView(HorillaProfileView):
                     "title": _("Send password reset link"),
                     "src": f"/{settings.STATIC_URL}images/ui/key.png",
                     "accessibility": "employee.cbv.accessibility.password_reset_accessibility",
-                    "attrs": """onclick="$('#reset-button').click();" """,
+                    "attrs": """onclick="event.preventDefault(); event.stopPropagation(); $('#reset-button').click(); return false;" """,
                 },
                 {
                     "divider": True,
@@ -87,14 +87,14 @@ class EmployeeProfileView(HorillaProfileView):
                     "title": _("Block Account"),
                     "src": f"/{settings.STATIC_URL}images/ui/block-user.png",
                     "accessibility": "employee.cbv.accessibility.block_account_accessibility",
-                    "attrs": """id="block-account" """,
+                    "attrs": """id="block-account" onclick="event.preventDefault(); event.stopPropagation(); return false;" """,
                     "variant": "danger",
                 },
                 {
                     "title": _("Un-Block Account"),
                     "src": f"/{settings.STATIC_URL}images/ui/unlock.png",
                     "accessibility": "employee.cbv.accessibility.un_block_account_accessibility",
-                    "attrs": """id="block-account" """,
+                    "attrs": """id="block-account" onclick="event.preventDefault(); event.stopPropagation(); return false;" """,
                     "variant": "success",
                 },
             ]
@@ -112,7 +112,7 @@ class EmployeeProfileView(HorillaProfileView):
                     "title": _("Send password reset link"),
                     "src": f"/{settings.STATIC_URL}images/ui/key.png",
                     "accessibility": "employee.cbv.accessibility.password_reset_accessibility",
-                    "attrs": """onclick="$('#reset-button').click();" """,
+                    "attrs": """onclick="event.preventDefault(); event.stopPropagation(); $('#reset-button').click(); return false;" """,
                 },
             ]
 

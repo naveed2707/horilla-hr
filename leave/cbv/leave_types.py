@@ -388,10 +388,14 @@ class LeaveTypeAssignForm(HorillaFormView):
                             leave_days = self.request.POST.get(
                                 f"leave_days_{employee_id}"
                             )
+                            # try:
+                            #     leave_days = int(leave_days)
+                            # except (TypeError, ValueError):
+                            #     leave_days = int(leave_type.total_days)
                             try:
-                                leave_days = int(leave_days)
+                                leave_days = float(leave_days)
                             except (TypeError, ValueError):
-                                leave_days = int(leave_type.total_days)
+                                leave_days = float(leave_type.total_days)
                             AvailableLeave(
                                 leave_type_id=leave_type,
                                 employee_id=employee,

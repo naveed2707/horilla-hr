@@ -6,7 +6,7 @@
     $("#id_is_active_parent_div").hide();
 
     (function () {
-        var defaultLeaveDays = parseInt({{ default_leave_days|default:0 }}, 10) || 0;
+        var defaultLeaveDays = parseFloat({{ default_leave_days|default:0 }}) || 0;
         var leaveDaysValues = {};
 
         function renderLeaveDaysTable() {
@@ -55,11 +55,25 @@
 
         $(document).on("change", "#id_employee_id", renderLeaveDaysTable);
         $(document).on("input", "#leaveDaysTableContainer .leave-days-input", function () {
-            var digitsOnly = $(this).val().replace(/[^0-9]/g, "");
-            $(this).val(digitsOnly);
+            var value = $(this).val();
+
+            if (value !== "") {
+                value = value.replace(/[^0-9.]/g, "");
+
+                var parts = value.split(".");
+                if (parts.length > 2) {
+                    value = parts[0] + "." + parts.slice(1).join("");
+                }
+
+                $(this).val(value);
+            }
+            
+            
+            // var digitsOnly = $(this).val().replace(/[^0-9]/g, "");
+            // $(this).val(digitsOnly);
         });
         $(document).on("keydown", "#leaveDaysTableContainer .leave-days-input", function (e) {
-            if (e.key === "." || e.key === "-" || e.key === "e" || e.key === "+") {
+            if (e.key === "-" || e.key === "e" || e.key === "+") {
                 e.preventDefault();
             }
         });
